@@ -1,0 +1,65 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "bullet_boom",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 1.02,
+  "sample": 50,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "paths": {
+      "hammer_1": {
+        "comps": {
+          "cc.Sprite": {
+            "spriteFrame": [
+              {
+                "frame": 0,
+                "value": {
+                  "__uuid__": "a0e6dc34-5ada-46b5-a634-0e78b413bc22"
+                }
+              },
+              {
+                "frame": 0.2,
+                "value": {
+                  "__uuid__": "011a2a48-f679-4428-b073-92ebeb14dc0f"
+                }
+              },
+              {
+                "frame": 0.4,
+                "value": {
+                  "__uuid__": "6079f445-ad9b-4fb5-91bd-54ff8645e503"
+                }
+              },
+              {
+                "frame": 0.6,
+                "value": {
+                  "__uuid__": "a909b5ac-4804-481a-b535-569e6afd2fc4"
+                }
+              },
+              {
+                "frame": 0.8,
+                "value": {
+                  "__uuid__": "e858085c-17d7-4a33-9e5c-2d62621c8d69"
+                }
+              },
+              {
+                "frame": 1,
+                "value": {
+                  "__uuid__": "bc2b25fc-6b5a-46fb-91c6-0b96a7042fbd"
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "events": [
+    {
+      "frame": 1,
+      "func": "anim_boom_end",
+      "params": []
+    }
+  ]
+}
