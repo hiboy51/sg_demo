@@ -57,7 +57,7 @@
   },
   "events": [
     {
-      "frame": 1,
+      "frame": 1.02,
       "func": "anim_boom_end",
       "params": []
     }

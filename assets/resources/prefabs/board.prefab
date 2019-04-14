@@ -27,14 +27,14 @@
     "_level": 1,
     "_components": [
       {
-        "__id__": 31
+        "__id__": 23
       },
       {
-        "__id__": 32
+        "__id__": 24
       }
     ],
     "_prefab": {
-      "__id__": 33
+      "__id__": 25
     },
     "_opacity": 255,
     "_color": {
@@ -533,34 +533,10 @@
       },
       {
         "__id__": 21
-      },
-      {
-        "__id__": 22
-      },
-      {
-        "__id__": 23
-      },
-      {
-        "__id__": 24
-      },
-      {
-        "__id__": 25
-      },
-      {
-        "__id__": 26
-      },
-      {
-        "__id__": 27
-      },
-      {
-        "__id__": 28
-      },
-      {
-        "__id__": 29
       }
     ],
     "_prefab": {
-      "__id__": 30
+      "__id__": 22
     },
     "_opacity": 255,
     "_color": {
@@ -607,32 +583,28 @@
     "_id": ""
   },
   {
-    "__type__": "cc.RigidBody",
+    "__type__": "cc.BoxCollider",
     "_name": "",
     "_objFlags": 0,
     "node": {
       "__id__": 17
     },
     "_enabled": true,
-    "_type": 0,
-    "_allowSleep": true,
-    "_gravityScale": 0,
-    "_linearDamping": 0,
-    "_angularDamping": 0,
-    "_linearVelocity": {
+    "tag": 0,
+    "_offset": {
       "__type__": "cc.Vec2",
-      "x": 0,
+      "x": -257,
       "y": 0
     },
-    "_angularVelocity": 0,
-    "_fixedRotation": false,
-    "enabledContactListener": false,
-    "bullet": false,
-    "awakeOnLoad": true,
+    "_size": {
+      "__type__": "cc.Size",
+      "width": 100,
+      "height": 515
+    },
     "_id": ""
   },
   {
-    "__type__": "cc.PhysicsBoxCollider",
+    "__type__": "cc.BoxCollider",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -640,25 +612,20 @@
     },
     "_enabled": true,
     "tag": 0,
-    "_density": 1,
-    "_sensor": false,
-    "_friction": 0.2,
-    "_restitution": 0,
-    "body": null,
     "_offset": {
       "__type__": "cc.Vec2",
-      "x": 242.2,
-      "y": 0.8
+      "x": -1,
+      "y": -258
     },
     "_size": {
       "__type__": "cc.Size",
-      "width": 66.9,
-      "height": 419
+      "width": 453,
+      "height": 100
     },
     "_id": ""
   },
   {
-    "__type__": "cc.PhysicsBoxCollider",
+    "__type__": "cc.BoxCollider",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -666,25 +633,20 @@
     },
     "_enabled": true,
     "tag": 0,
-    "_density": 1,
-    "_sensor": false,
-    "_friction": 0.2,
-    "_restitution": 0,
-    "body": null,
     "_offset": {
       "__type__": "cc.Vec2",
-      "x": 2.9,
-      "y": 239.8
+      "x": 257,
+      "y": 1
     },
     "_size": {
       "__type__": "cc.Size",
-      "width": 408.4,
-      "height": 59
+      "width": 100,
+      "height": 510
     },
     "_id": ""
   },
   {
-    "__type__": "cc.PhysicsBoxCollider",
+    "__type__": "cc.BoxCollider",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -692,258 +654,15 @@
     },
     "_enabled": true,
     "tag": 0,
-    "_density": 1,
-    "_sensor": false,
-    "_friction": 0.2,
-    "_restitution": 0,
-    "body": null,
     "_offset": {
       "__type__": "cc.Vec2",
-      "x": -238,
-      "y": -0.2
+      "x": -2,
+      "y": 259
     },
     "_size": {
       "__type__": "cc.Size",
-      "width": 61.7,
-      "height": 416.5
-    },
-    "_id": ""
-  },
-  {
-    "__type__": "cc.PhysicsBoxCollider",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 17
-    },
-    "_enabled": true,
-    "tag": 0,
-    "_density": 1,
-    "_sensor": false,
-    "_friction": 0.2,
-    "_restitution": 0,
-    "body": null,
-    "_offset": {
-      "__type__": "cc.Vec2",
-      "x": 0,
-      "y": -241
-    },
-    "_size": {
-      "__type__": "cc.Size",
-      "width": 411,
-      "height": 66
-    },
-    "_id": ""
-  },
-  {
-    "__type__": "cc.PhysicsPolygonCollider",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 17
-    },
-    "_enabled": false,
-    "tag": 0,
-    "_density": 1,
-    "_sensor": false,
-    "_friction": 0.2,
-    "_restitution": 0,
-    "body": null,
-    "_offset": {
-      "__type__": "cc.Vec2",
-      "x": -120.4,
-      "y": -131.6
-    },
-    "points": [
-      {
-        "__type__": "cc.Vec2",
-        "x": -33,
-        "y": -24.9
-      },
-      {
-        "__type__": "cc.Vec2",
-        "x": 33,
-        "y": -26.4
-      },
-      {
-        "__type__": "cc.Vec2",
-        "x": 33.4,
-        "y": 0
-      },
-      {
-        "__type__": "cc.Vec2",
-        "x": 38.14,
-        "y": -0.19
-      },
-      {
-        "__type__": "cc.Vec2",
-        "x": 36.3,
-        "y": 32.6
-      },
-      {
-        "__type__": "cc.Vec2",
-        "x": -0.8,
-        "y": 52.8
-      },
-      {
-        "__type__": "cc.Vec2",
-        "x": -36,
-        "y": 35.8
-      },
-      {
-        "__type__": "cc.Vec2",
-        "x": -38.2,
-        "y": -0.7
-      },
-      {
-        "__type__": "cc.Vec2",
-        "x": -32.9,
-        "y": -1.1
-      }
-    ],
-    "_id": ""
-  },
-  {
-    "__type__": "cc.PhysicsBoxCollider",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 17
-    },
-    "_enabled": false,
-    "tag": 0,
-    "_density": 1,
-    "_sensor": false,
-    "_friction": 0.2,
-    "_restitution": 0,
-    "body": null,
-    "_offset": {
-      "__type__": "cc.Vec2",
-      "x": -182.9,
-      "y": -24.1
-    },
-    "_size": {
-      "__type__": "cc.Size",
-      "width": 46.9,
-      "height": 18.9
-    },
-    "_id": ""
-  },
-  {
-    "__type__": "cc.PhysicsCircleCollider",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 17
-    },
-    "_enabled": false,
-    "tag": 0,
-    "_density": 1,
-    "_sensor": false,
-    "_friction": 0.2,
-    "_restitution": 0,
-    "body": null,
-    "_offset": {
-      "__type__": "cc.Vec2",
-      "x": 128.1,
-      "y": -80
-    },
-    "_radius": 17.9,
-    "_id": ""
-  },
-  {
-    "__type__": "cc.PhysicsCircleCollider",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 17
-    },
-    "_enabled": false,
-    "tag": 0,
-    "_density": 1,
-    "_sensor": false,
-    "_friction": 0.2,
-    "_restitution": 0,
-    "body": null,
-    "_offset": {
-      "__type__": "cc.Vec2",
-      "x": -55,
-      "y": 42
-    },
-    "_radius": 27.4,
-    "_id": ""
-  },
-  {
-    "__type__": "cc.PhysicsCircleCollider",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 17
-    },
-    "_enabled": false,
-    "tag": 0,
-    "_density": 1,
-    "_sensor": false,
-    "_friction": 0.2,
-    "_restitution": 0,
-    "body": null,
-    "_offset": {
-      "__type__": "cc.Vec2",
-      "x": 136.7,
-      "y": 104.7
-    },
-    "_radius": 27.4,
-    "_id": ""
-  },
-  {
-    "__type__": "cc.PhysicsBoxCollider",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 17
-    },
-    "_enabled": false,
-    "tag": 0,
-    "_density": 1,
-    "_sensor": false,
-    "_friction": 0.2,
-    "_restitution": 0,
-    "body": null,
-    "_offset": {
-      "__type__": "cc.Vec2",
-      "x": 24.9,
-      "y": 152.5
-    },
-    "_size": {
-      "__type__": "cc.Size",
-      "width": 51.3,
-      "height": 18.7
-    },
-    "_id": ""
-  },
-  {
-    "__type__": "cc.PhysicsBoxCollider",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 17
-    },
-    "_enabled": false,
-    "tag": 0,
-    "_density": 1,
-    "_sensor": false,
-    "_friction": 0.2,
-    "_restitution": 0,
-    "body": null,
-    "_offset": {
-      "__type__": "cc.Vec2",
-      "x": -175.8,
-      "y": 189.9
-    },
-    "_size": {
-      "__type__": "cc.Size",
-      "width": 36.6,
-      "height": 32.6
+      "width": 460,
+      "height": 100
     },
     "_id": ""
   },

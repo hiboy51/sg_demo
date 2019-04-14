@@ -1,5 +1,6 @@
 import BulletPool from "./BulletPool";
-import SGInit from "./SGInit";
+import SGInit, { FRAME_RATE } from "./SGInit";
+import Player from "./Player";
 
 const {ccclass, property} = cc._decorator;
 
@@ -12,52 +13,86 @@ export default class Bullet extends cc.Component {
     bulletPool: BulletPool = null;
 
     @property
-    fly_speed: number = 50;
-    
-    @property
-    rotate_speed: number = 30;
+    fly_speed: number = 100;
 
-    _animation: cc.Animation = null;
-    _rb: cc.RigidBody = null;
+    @property
+    rotate_speed: number = 100;
+
+    @property({
+        displayName: "子弹初始化图片",
+        type: cc.SpriteFrame
+    })
+    spf_init:cc.SpriteFrame = null;
+
+    @property({
+        displayName: "子弹sprite",
+        type: cc.Sprite
+    })
+    sp_bullet: cc.Sprite = null;
+
+    private _animation: cc.Animation = null;
+    private fly_dir: cc.Vec2 = null;
+
+    private _running: boolean = false;
+    private _ownerId: number = null;
+    get ownerId() {
+        return this._ownerId;
+    }
+    set ownerId(id: number) {
+        this._ownerId = id;
+    }
+
+    private _waitActive: boolean = true;
 
     onLoad() {
         this._animation = this.node.getComponent(cc.Animation);
-        this._rb = this.node.getComponent(cc.RigidBody);
-    
         this.bulletPool = SGInit.instance.bulletPool;
 
-        this._waitActive = false;
-    }
-
-    start() {
         if (this._waitActive) {
             this._waitActive = false;
-            this._rb.angularVelocity = this.rotate_speed;
         }
     }
 
-
-    onEndContact(contact, selfCollider, otherCollider) {
+    lateUpdate() {
+        if (this._running) {
+            let add = this.fly_dir.normalizeSelf().mulSelf(this.fly_speed / FRAME_RATE);
+            this.node.position = this.node.position.addSelf(add);
+    
+            this.node.rotation += this.rotate_speed / FRAME_RATE;
+        }
+    }
+    
+    onCollisionEnter(other, self) {
+        if (other.node.group == "player") {
+            let player = other.node.getComponent("Player") as Player;
+            if (player.playerId == this.ownerId) {
+                return;
+            }
+        }
+        this._running = false;
         this._animation.play("bullet_boom");
     }
 
     public fly(v: cc.Vec2) {
-        this._rb.linearVelocity = v;
+        this.fly_dir = v;
+        this._running = true;
     }
 
     // ================================================================================
     // bullet pool callback
     // ================================================================================
-    _waitActive: boolean = true;
     public onReady() {
         if (!this._waitActive) {
-            this._rb.angularVelocity = this.rotate_speed;
+            this.sp_bullet.spriteFrame = this.spf_init;
         }
     }
     
     public onRecycle() {
-        this._rb.linearVelocity = cc.Vec2.ZERO;
-        this._rb.angularVelocity = 0;
+        this.sp_bullet.spriteFrame = this.spf_init;
+        this._running = false;
+        this.fly_dir = null;
+        this.node.rotation = 0;
+        this.node.position = cc.Vec2.ZERO;
     }
 
     // ================================================================================

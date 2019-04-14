@@ -1,4 +1,5 @@
 import SGInit from "./SGInit";
+import Bullet from "./Bullet";
 
 const {ccclass, property} = cc._decorator;
 
@@ -38,7 +39,7 @@ export default class BulletPool extends cc.Component {
             return;
         }
 
-        let bullet = b.getComponent("Bullet");
+        let bullet = b.getComponent("Bullet") as Bullet;
         bullet && bullet.onRecycle();
         this._pool.push(b);
     }

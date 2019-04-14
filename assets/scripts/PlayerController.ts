@@ -78,6 +78,7 @@ export default class PlayerController extends cc.Component {
         bullet.position = this.player.node.position;
         bullet.parent = this.player.node.parent;
         let comp_bullet:Bullet = bullet.getComponent("Bullet");
+        comp_bullet.ownerId = this.player.playerId;
         comp_bullet.fly(this.player.face_dir.mulSelf(comp_bullet.fly_speed));
     }
 }
