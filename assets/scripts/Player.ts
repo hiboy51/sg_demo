@@ -4,7 +4,7 @@ const {ccclass, property} = cc._decorator;
 
 export enum AvatarAnim {
     "idle",
-    "wark",
+    "walk",
     "aim"
 }
 
@@ -40,9 +40,26 @@ export default class Player extends cc.Component {
 
     private _animation: cc.Animation = null;
     private _forward: boolean = false;
-    private _isBlock: boolean = false;
     private _aimPoint: cc.Vec2 = null;
     private _aimCallBack: Function = null;
+    private _block: boolean = false;
+
+    set forward(b: boolean) {
+        this._forward = b;
+    }
+    get forward() {
+        return this._forward;
+    }
+    get aimPoint() {
+        return this._aimPoint;
+    }
+
+    set block(b: boolean) {
+        this._block = b;
+    }
+    get block() {
+        return this._block;
+    }
 
     private _playerId: number = 1;
     get playerId() {
@@ -53,32 +70,6 @@ export default class Player extends cc.Component {
         this._animation = this.node.getComponent(cc.Animation);
     }
 
-    lateUpdate() {
-        if (this._forward && !this._isBlock) {
-            let sub = this._aimPoint.sub(this.node.position);
-            if (sub.mag() > this.near_check) {
-                this.updateDirection(sub);
-                let add = sub.normalizeSelf().mulSelf(this.wark_speed / FRAME_RATE)
-                this.node.position = this.node.position.addSelf(add);
-            }
-        }
-    }
-
-    onCollisionEnter(other, self) {
-        if (other.node.group == "bullet") {
-            // 游戏结束
-        }
-        else if (other.node.group == "edges") {
-            this._isBlock = true;
-        }
-    }
-
-    onCollisionExit(other, self) {
-        if (other.node.group == "edges") {
-            this._isBlock = false;
-        }
-    }
-
     public playAnimation(anim: AvatarAnim, cb?: Function) {
         this._aimCallBack = null;
         if (anim == AvatarAnim.idle) {
@@ -87,7 +78,7 @@ export default class Player extends cc.Component {
                 this._animation.play("avatar_idle");
             }
         }
-        else if (anim == AvatarAnim.wark) {
+        else if (anim == AvatarAnim.walk) {
             let as = this._animation.getAnimationState("avatar_walk");
             if (!as || !as.isPlaying) {
                 this._animation.play("avatar_walk");
@@ -116,7 +107,6 @@ export default class Player extends cc.Component {
     }
 
     public setForward(f: boolean, aim?:cc.Vec2) {
-        this._isBlock = false;
         this._forward = f;
         if (f && aim) {
             this._aimPoint = this.node.parent.convertToNodeSpaceAR(aim);

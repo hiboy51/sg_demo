@@ -40,6 +40,7 @@ export default class Main extends cc.Component {
 
         let spawnInfo = this.mapInfo.getObject("spawn_point1");
         let spawnPos = new cc.Vec2(spawnInfo.x, spawnInfo.y);
+        spawnPos = this.layer_players.convertToNodeSpaceAR(spawnPos);
         p.position = spawnPos;
 
         this.playerCtrls.push(p.getComponent("PlayerController"));
