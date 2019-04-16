@@ -1,5 +1,7 @@
 import PlayerController from "./PlayerController";
-import { UserInput } from "./UserInput";
+import { UserInput, PlayerCreated } from "./UserInput";
+import LockStepSystem from "./LockStepSystem";
+import SGInit from "./SGInit";
 
 const {ccclass, property} = cc._decorator;
 
@@ -18,23 +20,38 @@ export default class Main extends cc.Component {
 
     onLoad() {
         this.node.on("on_user_input", (ui: UserInput) => {
-            this.playerCtrls.forEach(each => {
-                each.appendInput(ui);
-            })
+            let serialize = ui.serialize();
+            serialize["player"] = 1;
+            SGInit.instance.lsSystem.uploadInput(serialize);
         });
     }
 
     start() {
-        this.spawnPlayer();
+        let op = new PlayerCreated();
+        let serialize = op.serialize();
+        serialize["player"] = 1;
+
+        SGInit.instance.lsSystem.uploadInput(serialize);
     }
 
-    update() {
-        this.playerCtrls.forEach(each => {
-            each.onFrame(0);
-        })
+    public onFrame(frameData: {owner: number, op: UserInput}) {
+        if (frameData.op instanceof PlayerCreated) {
+            frameData.op.apply(this);
+        }
+        else {
+            let playerCtrl = this.playerCtrls.reduce((pre, cur) => {
+                if (pre && pre.player.playerId == frameData.owner) {
+                    cur = pre;
+                }
+                return cur;
+            }, null);
+            if (playerCtrl) {
+                playerCtrl.onFrame(frameData.op);
+            }
+        }
     }
 
-    private spawnPlayer() {
+    public spawnPlayer() {
         let p = cc.instantiate(this.pref_player);
         p.parent = this.layer_players;
 

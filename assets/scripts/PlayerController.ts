@@ -176,15 +176,8 @@ export default class PlayerController extends cc.Component implements StateMachi
         this.player = p;
     }
     
-    public onFrame(frameIdx: number) {
-        if (this._inputQueue.length == 0) {
-            return;
-        }
-
-        let ip = null;
-        while (ip = this._inputQueue.shift()) {
-            ip.apply(this);
-        }
+    public onFrame(input: UserInput) {
+        input.apply(this);
     }
 
     public playerForward(aim: cc.Vec2) {
