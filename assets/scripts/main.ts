@@ -2,6 +2,7 @@ import PlayerController from "./PlayerController";
 import { UserInput, PlayerCreated } from "./UserInput";
 import LockStepSystem from "./LockStepSystem";
 import SGInit from "./SGInit";
+import AIPlayer from "./AIPlayer";
 
 const {ccclass, property} = cc._decorator;
 
@@ -22,7 +23,9 @@ export default class Main extends cc.Component {
         this.node.on("on_user_input", (ui: UserInput) => {
             let serialize = ui.serialize();
             serialize["player"] = 1;
-            SGInit.instance.lsSystem.uploadInput(serialize);
+            if (SGInit.instance && SGInit.instance.lsSystem) {
+                SGInit.instance.lsSystem.uploadInput(serialize);
+            }
         });
     }
 
@@ -61,5 +64,8 @@ export default class Main extends cc.Component {
         p.position = spawnPos;
 
         this.playerCtrls.push(p.getComponent("PlayerController"));
+        p.addComponent("AIPlayer");
+
+        return p;
     }
 }

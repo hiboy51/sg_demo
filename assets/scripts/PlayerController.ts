@@ -10,7 +10,7 @@ const {ccclass, property} = cc._decorator;
 // 状态机
 // ===============================================================================
 
-enum PlayerStateFlag {
+export enum PlayerStateFlag {
     "idle",
     "walk",
     "shoot"
@@ -74,6 +74,7 @@ export class PlayerWalk extends PlayerState {
 
 export class PlayerShoot extends PlayerState {
     private _preState: MachineState;
+    private _nextState: MachineState;
     private _stateEnd: boolean = false;
 
     constructor(p: Player, machine: StateMachine) {
@@ -87,11 +88,12 @@ export class PlayerShoot extends PlayerState {
         this.player.playAnimation(AvatarAnim.aim, () => {
             this._stateEnd = true;
             (this.machine as PlayerController).playerShoot();
-            this.machine.changeState(this._preState);
+            this.machine.changeState(this._nextState || this._preState);
         });
     }
 
     onExitState(next: MachineState, succ: RESULT_CALLBACK) {
+        this._nextState = next;
         succ(this._stateEnd);
     }
 }
@@ -127,7 +129,7 @@ export default class PlayerController extends cc.Component implements StateMachi
             let sub = p.aimPoint.sub(this.node.position);
             if (sub.mag() > p.near_check) {
                 p.updateDirection(sub);
-                let add = sub.normalizeSelf().mulSelf(p.wark_speed / FRAME_RATE)
+                let add = sub.normalizeSelf().mulSelf(p.wark_speed / FRAME_RATE);
                 this.node.position = this.node.position.addSelf(add);
             }
             else {
@@ -220,6 +222,9 @@ export default class PlayerController extends cc.Component implements StateMachi
     // override from StateMachine
     // =================================================================
     private _curPlayerState: MachineState = null;
+    get curPlayerState() {
+        return this._curPlayerState;
+    }
     changeState(st: MachineState) {
         if (this._curPlayerState) {
             this._curPlayerState.onExitState(st, succ => {

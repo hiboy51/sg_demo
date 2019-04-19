@@ -3,6 +3,7 @@ import Bullet from "./Bullet";
 import LockStepSystem from "./LockStepSystem";
 
 export const FRAME_RATE = 50;
+export const FRAME_INTERVAL = 0.02;
 const {ccclass, property} = cc._decorator;
 
 export let DEBUG = true;
@@ -21,9 +22,12 @@ export function SGLog(...msg) : void {
 * @memberof CyEngine
 */
 export function SeededRandom(max = 1, min = 0) {
-   this.seed = (this.seed * 9301 + 49297) % 233280;
-   let rnd = this.seed / 233280.0;
-   return min + rnd * (max - min);
+    // this.seed = 55;
+    // this.seed = (this.seed * 9301 + 49297) % 233280;
+    // let rnd = this.seed / 233280.0;
+    // return min + rnd * (max - min);
+
+    return min + Math.random() * (max - min);
 }
 
 @ccclass
@@ -38,6 +42,11 @@ export default class SGInit extends cc.Component {
         this._bulletPool = bp;
     }
 
+    private _urlParams: any = {};
+    get urlParams() {
+        return this._urlParams;
+    }
+
     private _lsSystem: LockStepSystem = null;
     get lsSystem() {
         return this._lsSystem;
@@ -50,6 +59,8 @@ export default class SGInit extends cc.Component {
     pref_board: cc.Prefab = null;
 
     onLoad() {
+        this.parseURLParams();
+
         SGInit.instance = this;
         
         let manager = cc.director.getCollisionManager();
@@ -57,5 +68,13 @@ export default class SGInit extends cc.Component {
 
         let board = cc.instantiate(this.pref_board);
         board.parent = this.node;
+    }
+
+    private parseURLParams() {
+        let params: Array<any> = window.location.search.substr(1).split("&").map(each => each.split("="));
+        params.forEach(each => {
+            let [name, val] = each;
+            this._urlParams[name] = val;
+        })
     }
 }
