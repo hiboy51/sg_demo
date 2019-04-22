@@ -1,6 +1,7 @@
 import { MachineState, RESULT_CALLBACK, StateMachine } from "./StateMachine";
 import PlayerController, { PlayerIdle, PlayerWalk, PlayerState, PlayerStateFlag } from "./PlayerController";
-import { SeededRandom, FRAME_RATE, FRAME_INTERVAL } from "./SGInit";
+import { FRAME_RATE, FRAME_INTERVAL } from "./SGInit";
+import LockStepSystem from "./LockStepSystem";
 
 const {ccclass, property} = cc._decorator;
 
@@ -39,7 +40,7 @@ export abstract class AIMachineState implements MachineState {
     }
 
     protected _nextState() {
-        let rand = SeededRandom(100, 0);
+        let rand = LockStepSystem.SeededRandom(100, 0);
         if (rand < 20) {
             return new AIIdle(this._playerCtrl, this._machine);
         }
@@ -63,7 +64,7 @@ export class AIIdle extends AIMachineState {
     }
 
     onEnterState(pre: MachineState): void {
-        this._sustain = SeededRandom( FRAME_RATE, FRAME_RATE * 0.5);
+        this._sustain = LockStepSystem.SeededRandom( FRAME_RATE, FRAME_RATE * 0.5);
         this._playerCtrl.playerStandBy();
     } 
 
@@ -102,7 +103,7 @@ export class AIWander extends AIMachineState {
     }
 
     onEnterState(pre: MachineState): void {
-        this._sustain = SeededRandom(FRAME_RATE * 3, FRAME_RATE * 0.5);
+        this._sustain = LockStepSystem.SeededRandom(FRAME_RATE * 3, FRAME_RATE * 0.5);
         this._aimPoint = this._aimPoint || this.genAim();
         
         this._playerCtrl.playerForward(this._aimPoint);
@@ -113,8 +114,8 @@ export class AIWander extends AIMachineState {
     }
 
     private genAim() {
-        let x = cc.winSize.width * SeededRandom(1, 0);
-        let y = cc.winSize.height * SeededRandom(1, 0);
+        let x = cc.winSize.width * LockStepSystem.SeededRandom(1, 0);
+        let y = cc.winSize.height * LockStepSystem.SeededRandom(1, 0);
         return new cc.Vec2(x, y);
     }
 }
@@ -134,7 +135,7 @@ export class AIFight extends AIMachineState {
         if ((this._playerCtrl.curPlayerState as PlayerState).state != PlayerStateFlag.shoot || this._frameElapse > this._overtime) {
             this._stateEnd = true;
 
-            let rand = SeededRandom(100, 0);
+            let rand = LockStepSystem.SeededRandom(100, 0);
             let changeState = rand < 50 ? this._preState : this._nextState();
             this._machine.changeState(changeState);
         }

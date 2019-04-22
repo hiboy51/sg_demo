@@ -61,9 +61,12 @@ export default class Player extends cc.Component {
         return this._block;
     }
 
-    private _playerId: number = 1;
+    private _playerId: string = "";
     get playerId() {
         return this._playerId;
+    }
+    set playerId(id: string) {
+        this._playerId = id;
     }
 
     onLoad() {

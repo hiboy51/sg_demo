@@ -34,11 +34,11 @@ export default class Bullet extends cc.Component {
     private fly_dir: cc.Vec2 = null;
 
     private _running: boolean = false;
-    private _ownerId: number = null;
+    private _ownerId: string = null;
     get ownerId() {
         return this._ownerId;
     }
-    set ownerId(id: number) {
+    set ownerId(id: string) {
         this._ownerId = id;
     }
 

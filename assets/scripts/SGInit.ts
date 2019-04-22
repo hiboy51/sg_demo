@@ -2,7 +2,7 @@ import BulletPool from "./BulletPool";
 import Bullet from "./Bullet";
 import LockStepSystem from "./LockStepSystem";
 
-export const FRAME_RATE = 50;
+export const FRAME_RATE = 20;
 export const FRAME_INTERVAL = 0.02;
 const {ccclass, property} = cc._decorator;
 
@@ -11,23 +11,6 @@ export function SGLog(...msg) : void {
     if (DEBUG) {
         cc.log(msg);
     }
-}
-
-/**
-*随机函数
-*
-* @param {number} [max=1]
-* @param {number} [min=0]
-* @returns
-* @memberof CyEngine
-*/
-export function SeededRandom(max = 1, min = 0) {
-    // this.seed = 55;
-    // this.seed = (this.seed * 9301 + 49297) % 233280;
-    // let rnd = this.seed / 233280.0;
-    // return min + rnd * (max - min);
-
-    return min + Math.random() * (max - min);
 }
 
 @ccclass

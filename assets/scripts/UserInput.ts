@@ -1,8 +1,10 @@
 import PlayerController from "./PlayerController";
 import Main from "./main";
+import SGInit from "./SGInit";
 
 const {ccclass, property} = cc._decorator;
 export abstract class UserInput {
+    public abstract clazz(): any;
     public abstract apply(...args): void;
     public abstract serialize() : object;
 }
@@ -17,6 +19,10 @@ export class Forward extends UserInput {
     constructor(aim: cc.Vec2) {
         super();
         this._aimPoint = aim;
+    }
+
+    public clazz() {
+        return Forward;
     }
     
     public apply(pc:PlayerController) {
@@ -37,6 +43,10 @@ export class Forward extends UserInput {
 // =================================================================================
 
 export class ShootOnce extends UserInput {
+    public clazz() {
+        return ShootOnce;
+    }
+
     public apply(pc:PlayerController) {
         pc.playerStartShoot();
     }
@@ -54,6 +64,10 @@ export class ShootOnce extends UserInput {
 // =================================================================================
 
 export class ShootMuti extends UserInput {
+    public clazz() {
+        return ShootMuti;
+    }
+
     public apply(pc:PlayerController) {
         pc.playerMutiShoot();
     }
@@ -71,6 +85,10 @@ export class ShootMuti extends UserInput {
 // =================================================================================
 
 export class StopShoot extends UserInput {
+    public clazz() {
+        return StopShoot;
+    }
+
     public apply(pc:PlayerController) {
         pc.playerStopShoot();
     }
@@ -88,6 +106,10 @@ export class StopShoot extends UserInput {
 // =================================================================================
 
 export class StandBy extends UserInput {
+    public clazz() {
+        return StandBy;
+    }
+
     public apply(pc:PlayerController) {
 
     }
@@ -101,8 +123,12 @@ export class StandBy extends UserInput {
 // =================================================================================
 
 export class PlayerCreated extends UserInput {
-    public apply(m: Main) {
-        m.spawnPlayer();
+    public clazz() {
+        return PlayerCreated;
+    }
+
+    public apply(m: Main, playerId: string) {
+        m.spawnPlayer(playerId);
     }
 
     public serialize() : object {

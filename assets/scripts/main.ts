@@ -20,26 +20,22 @@ export default class Main extends cc.Component {
     playerCtrls: PlayerController[] = [];
 
     onLoad() {
+    }
+    
+    start() {
+        let op = new PlayerCreated();
+        SGInit.instance.lsSystem.uploadInput(op);
+
         this.node.on("on_user_input", (ui: UserInput) => {
-            let serialize = ui.serialize();
-            serialize["player"] = 1;
             if (SGInit.instance && SGInit.instance.lsSystem) {
-                SGInit.instance.lsSystem.uploadInput(serialize);
+                SGInit.instance.lsSystem.uploadInput(ui);
             }
         });
     }
 
-    start() {
-        let op = new PlayerCreated();
-        let serialize = op.serialize();
-        serialize["player"] = 1;
-
-        SGInit.instance.lsSystem.uploadInput(serialize);
-    }
-
-    public onFrame(frameData: {owner: number, op: UserInput}) {
+    public onFrame(frameData: {owner: string, op: UserInput}) {
         if (frameData.op instanceof PlayerCreated) {
-            frameData.op.apply(this);
+            frameData.op.apply(this, frameData.owner);
         }
         else {
             let playerCtrl = this.playerCtrls.reduce((pre, cur) => {
@@ -54,9 +50,13 @@ export default class Main extends cc.Component {
         }
     }
 
-    public spawnPlayer() {
+    public spawnPlayer(playerId: string) {
+
         let p = cc.instantiate(this.pref_player);
         p.parent = this.layer_players;
+
+        let player = p.getComponent("Player");
+        player.playerId = playerId;
 
         let spawnInfo = this.mapInfo.getObject("spawn_point1");
         let spawnPos = new cc.Vec2(spawnInfo.x, spawnInfo.y);
@@ -64,7 +64,6 @@ export default class Main extends cc.Component {
         p.position = spawnPos;
 
         this.playerCtrls.push(p.getComponent("PlayerController"));
-        p.addComponent("AIPlayer");
 
         return p;
     }
