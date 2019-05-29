@@ -306,7 +306,10 @@ export default class Display extends cc.Component {
 
     start() {
         this.schedule(this._onTick, 0);
-        // 立即执行一次，避免界面刷新有一帧的延迟
+    }
+    
+    onEnable() {
+        // 界面唤醒时立即执行一次，避免界面刷新有一帧的延迟
         this._onTick();
     }
 }
