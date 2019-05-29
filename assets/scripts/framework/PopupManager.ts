@@ -2,7 +2,7 @@ import PopupBase from "./PopupBase";
 
 const {ccclass, property} = cc._decorator;
 
-export function indexProxy(clazz: any) {
+function indexProxy(clazz: any) {
     return new Proxy(clazz, {
         get: (target, name)=>{
             return name in clazz ? target[name] : target.instance[name];
@@ -105,5 +105,4 @@ class PopupManager extends cc.Component {
         });
     }
 }
-
 export default indexProxy(PopupManager);
