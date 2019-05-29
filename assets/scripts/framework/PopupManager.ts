@@ -98,10 +98,7 @@ class PopupManager extends cc.Component {
             }
 
             this[closeFuncName] = ()=>{
-                let k = closeFuncName
-                    .split("")
-                    .slice(1)
-                    .join("");
+                let k = showFuncName;
                 
                 if (this._popupPool[k]) {
                     let comp = this._popupPool[k] as PopupBase;
