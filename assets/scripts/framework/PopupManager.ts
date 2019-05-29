@@ -79,15 +79,21 @@ class PopupManager extends cc.Component {
                 .split("")
                 .map((each, idx) => idx == 0 ? each.toUpperCase() : each)
                 .join("");
-            
             let closeFuncName = `$${showFuncName}`;
 
             this[showFuncName] = (...args: any[]) => {
-                let nd = cc.instantiate(each);
-                nd.parent = this.nd_root;
-                let comp = nd.getComponent("PopupBase") as PopupBase;
+                let comp: PopupBase = this._popupPool[showFuncName];
+                let nd: cc.Node;
+                if (comp) {
+                    nd = comp.node;
+                }
+                else {
+                    nd = cc.instantiate(each);
+                    comp = nd.getComponent("PopupBase");
+                    this._popupPool[showFuncName] = comp;
+                }
                 comp.setData.apply(comp, args);
-                this._popupPool[showFuncName] = comp;
+                nd.parent = this.nd_root;
                 return comp;
             }
 
