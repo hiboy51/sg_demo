@@ -1,13 +1,14 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.1",
   "uuid": "bdf6d04e-0c13-4dc4-a5d5-5921d5ce5a1b",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "platformSettings": {},
   "subMetas": {
     "fx_crash_smoke_0": {
-      "ver": "1.0.3",
+      "ver": "1.0.4",
       "uuid": "a0e6dc34-5ada-46b5-a634-0e78b413bc22",
       "rawTextureUuid": "bdf6d04e-0c13-4dc4-a5d5-5921d5ce5a1b",
       "trimType": "auto",

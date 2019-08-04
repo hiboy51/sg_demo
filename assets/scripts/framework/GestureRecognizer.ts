@@ -13,6 +13,11 @@ export default class GestureRecognizer extends cc.Component {
     dragMinDistanceCheck: number = 10;
 
     @property({
+        displayName: "长按时间判定"
+    })
+    longTapCheckInterval: number = 1;
+
+    @property({
         displayName: "单击事件处理",
         type: cc.Component.EventHandler
     })
@@ -36,10 +41,17 @@ export default class GestureRecognizer extends cc.Component {
     })
     onDragEnd: cc.Component.EventHandler = null;
 
+    @property({
+        displayName: "长按处理",
+        type: cc.Component.EventHandler
+    })
+    onLongTap: cc.Component.EventHandler = null;
+
     private _scheduleCopy: Function = null;
     private _isMoving: boolean = false;
     private _checkDbClick: boolean = false;
 
+    private _longTapCheckHandler: number = NaN;
     // //////////////////////////////////////////////////////////////////////////////////////////////
     // life cycle
     // //////////////////////////////////////////////////////////////////////////////////////////////
@@ -59,8 +71,15 @@ export default class GestureRecognizer extends cc.Component {
     // private interface
     // //////////////////////////////////////////////////////////////////////////////////////////////
 
-    private _onTouchBegin() {
+    private _onTouchBegin(event: cc.Touch) {
         this._isMoving = false;
+
+        let clickPos = event.getLocation();
+        this._longTapCheckHandler = setTimeout(() => {
+            this._longTapCheckHandler = NaN;
+            this.onLongTap && this.onLongTap.emit([this.node, clickPos]);
+        }, this.longTapCheckInterval * 1000);
+        event["stopPropagation"]();
     }
 
     private _onTouchMove(event: cc.Touch) {
@@ -68,6 +87,11 @@ export default class GestureRecognizer extends cc.Component {
         let mag = Math.sqrt(delta.x * delta.x + delta.y * delta.y);
         if (mag < this.dragMinDistanceCheck) {
             return;
+        }
+
+        if (!Number.isNaN(this._longTapCheckHandler)) {
+            clearTimeout(this._longTapCheckHandler);
+            this._longTapCheckHandler = NaN;
         }
 
         this._isMoving = true;
@@ -82,6 +106,11 @@ export default class GestureRecognizer extends cc.Component {
     }
 
     private _onTouchEnd(event: cc.Touch) {
+        if (!Number.isNaN(this._longTapCheckHandler)) {
+            clearTimeout(this._longTapCheckHandler);
+            this._longTapCheckHandler = NaN;
+        }
+
         // 处理拖动结束
         let clickPos = event.getLocation();
         let startPos = event.getStartLocation();

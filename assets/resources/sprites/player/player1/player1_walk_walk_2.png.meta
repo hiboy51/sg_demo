@@ -1,13 +1,14 @@
 {
-  "ver": "2.2.0",
+  "ver": "2.3.1",
   "uuid": "e45c9e0c-c89b-4567-84f6-ee943531915f",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
+  "platformSettings": {},
   "subMetas": {
     "player1_walk_walk_2": {
-      "ver": "1.0.3",
+      "ver": "1.0.4",
       "uuid": "9efa3598-b60d-4706-8023-e0189cdeb366",
       "rawTextureUuid": "e45c9e0c-c89b-4567-84f6-ee943531915f",
       "trimType": "auto",
