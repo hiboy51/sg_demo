@@ -1,6 +1,6 @@
 import BezierPoint, { PointType } from "./BezierPathPoint";
 
-const {ccclass, property} = cc._decorator;
+const {ccclass, property, executeInEditMode} = cc._decorator;
 
 @ccclass("BezierSerialize")
 export class BezierSerialize {
@@ -22,6 +22,7 @@ export class BezierNode {
 export type Bezier = [BezierNode, BezierNode];
 
 @ccclass
+@executeInEditMode
 export default class BezierEditor extends cc.Component {
     @property(cc.Prefab)
     pref_point: cc.Prefab = null;
@@ -36,16 +37,48 @@ export default class BezierEditor extends cc.Component {
     private _paths: BezierPoint[] = [];
     private _bezierNodes: BezierNode[] = [];
     private _bezier_list: Bezier[] = [];
+
     // ==========================================================================================
     // life cycle
     // ==========================================================================================
     
     onLoad() {
+        let childCount = this.node.childrenCount;
+        for (let i = childCount - 1; i >= 0; --i) {
+            let isPoint = this.node.children[i].getComponent(BezierPoint);
+            if (isPoint) {
+                this.node.children.splice(i, 1);
+            }
+        }
+
         this._unserializeBezier();
         this._isDirty = true;
+
+        if (CC_EDITOR) {
+            this.node.on(cc.Node.EventType.CHILD_REMOVED, (child: cc.Node) => {
+                let comp_point = child.getComponent(BezierPoint);
+                if (comp_point) {
+                    this._pointRemoved(comp_point);
+                }
+            });
+
+            this.node.on(cc.Node.EventType.CHILD_ADDED, (child: cc.Node) => {
+                let comp_point = child.getComponent(BezierPoint);
+                comp_point.editor = this;
+                if (comp_point.pointType == PointType.Path) {
+                    this._appendBezierNode(comp_point);
+                    this._paths.push(comp_point);
+                }
+                else {
+                    this._attachToBezierNode(comp_point);
+                }
+                this._isDirty = true;
+            });
+        }
     }
 
     update() {
+
         if (!this._isDirty) {
             return;
         }
@@ -116,6 +149,7 @@ export default class BezierEditor extends cc.Component {
     
     public onPathPointDragging(point: BezierPoint, curPos: cc.Vec2) {
         point.node.position = this.node.convertToNodeSpaceAR(curPos);
+        this._serializeBezier();
         this._isDirty = true;
     }
 
@@ -126,21 +160,12 @@ export default class BezierEditor extends cc.Component {
 
     public onPathPointRemove(point: BezierPoint) {
         point.node.parent = null;
-        if (point.pointType == PointType.Path) {
-            let find = this._paths.indexOf(point);
-            if (find >= 0) {
-                this._paths.splice(find, 1);
-                this._removeBezierNode(point);
-                this._isDirty = true;
-            }
-        }
-        else {
-            let bezierNode = this._bezierNodes.find(each => each.ctrl == point);
-            if (bezierNode) {
-                bezierNode.ctrl = null;
-                this._isDirty = true;
-            }
-        }
+        this._pointRemoved(point);
+    }
+
+    public onPointMovedInEdit(p: BezierPoint) {
+        this._isDirty = true;
+        this._serializeBezier();
     }
 
     // ==========================================================================================
@@ -169,6 +194,25 @@ export default class BezierEditor extends cc.Component {
     // ==========================================================================================
     // private interfaces
     // ==========================================================================================
+    private _pointRemoved(p: BezierPoint) {
+        if (p.pointType == PointType.Path) {
+            let find = this._paths.indexOf(p);
+            if (find >= 0) {
+                this._paths.splice(find, 1);
+                this._removeBezierNode(p);
+                this._isDirty = true;
+            }
+        }
+        else {
+            let bezierNode = this._bezierNodes.find(each => each.ctrl == p);
+            if (bezierNode) {
+                bezierNode.ctrl = null;
+                this._serializeBezier();
+                this._isDirty = true;
+            }
+        }
+    }
+
     private _attachToBezierNode(p: BezierPoint) {
         let tmp = this._bezierNodes
             .filter(each => !each.ctrl)
@@ -220,18 +264,31 @@ export default class BezierEditor extends cc.Component {
             return;
         }
 
+        let removeAttachedCtrl = (node: BezierNode) => {
+            if (node.ctrl) {
+                node.ctrl.node.parent = null;
+            }
+        };
+
         if (point.pointType == PointType.Path) {
             // head
-            if (this._bezierNodes[0].point == point) { 
+            if (this._bezierNodes[0].point == point) {
+                removeAttachedCtrl(this._bezierNodes[0]);
+                removeAttachedCtrl(this._bezierNodes[1]);
                 this._bezierNodes.splice(0, 2);
             }
             // tail
             else if (this._bezierNodes[this._bezierNodes.length - 1].point == point) {
-                this._bezierNodes.pop();
-                this._bezierNodes.pop();
+                removeAttachedCtrl(this._bezierNodes.pop());
+                removeAttachedCtrl(this._bezierNodes.pop());
             }
             // middle
             else {
+                this._bezierNodes.forEach(each => {
+                    if (each.point == point) {
+                        removeAttachedCtrl(each);
+                    }
+                });
                 this._bezierNodes = this._bezierNodes.filter(each => each.point != point);
             }
             this._updateBezierList();
@@ -242,9 +299,9 @@ export default class BezierEditor extends cc.Component {
         this.bezier_serialized = this._bezier_list.map(each => {
             let [start, end] = each;
             let serialize = new BezierSerialize();
-            serialize.start = start.point.node.position;
-            serialize.end = end.point.node.position;
-            serialize.ctrls = each.filter(ea => !!ea.ctrl).map(ea => ea.ctrl.node.position);
+            serialize.start = cc.v2(start.point.node.x, start.point.node.y);
+            serialize.end =  cc.v2(end.point.node.x, end.point.node.y);
+            serialize.ctrls = each.filter(ea => !!ea.ctrl).map(ea => cc.v2(ea.ctrl.node.x, ea.ctrl.node.y));
             return serialize;
         });
     }
@@ -258,8 +315,8 @@ export default class BezierEditor extends cc.Component {
         this._paths.forEach(each => each.node.parent = this.node);
 
         this._bezier_list = this.bezier_serialized.map(each => {
-            let start = this._paths.find(e => e.node.position == each.start);
-            let end = this._paths.find(e => e.node.position == each.end);
+            let start = this._paths.find(e => e.node.position.equals(each.start));
+            let end = this._paths.find(e => e.node.position.equals(each.end));
 
             let [startCtrl, endCtrl] = each.ctrls.map(e => {
                 let ctrlPoint = this._instantiatePoint(PointType.Control, e);
@@ -281,8 +338,13 @@ export default class BezierEditor extends cc.Component {
     }
 
     private _instantiatePoint(type: PointType, pos: cc.Vec2) {
+        const color = type == PointType.Path ? cc.Color.WHITE : cc.Color.GRAY;
+        const size = type == PointType.Path ? cc.size(20, 20) : cc.size(15, 15);
+
         let point = cc.instantiate(this.pref_point);
         point.position = pos;
+        point.color = color;
+        point.setContentSize(size);
         let comp_point = point.getComponent(BezierPoint);
         comp_point.editor = this;
         comp_point.pointType = type;

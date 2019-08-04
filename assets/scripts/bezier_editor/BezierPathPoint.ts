@@ -1,6 +1,6 @@
 import BezierEditor from "./BezierEditor";
 
-const {ccclass, property} = cc._decorator;
+const {ccclass, property, executeInEditMode} = cc._decorator;
 
 export enum PointType {
     Path,
@@ -8,6 +8,7 @@ export enum PointType {
 }
 
 @ccclass
+@executeInEditMode
 export default class BezierPoint extends cc.Component {
     private _editor: BezierEditor = null;
 
@@ -27,6 +28,17 @@ export default class BezierPoint extends cc.Component {
     public get pointType() {
         return this._type;
     }
+
+    // ==========================================================================================
+    // life cycle
+    // ==========================================================================================
+    onLoad() {
+        if (CC_EDITOR) {
+            this.node.on(cc.Node.EventType.POSITION_CHANGED, () => {
+                this.editor && this.editor.onPointMovedInEdit(this);
+            });
+        }
+    } 
     
     // ==========================================================================================
     // hooks of GestureRecognizer
