@@ -1,0 +1,28 @@
+{
+  "name": "sg_demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gulpfile.babel.js",
+  "dependencies": {
+    "csv": "^5.1.1",
+    "gulp": "^4.0.2",
+    "gulp-load-plugins": "^2.0.1",
+    "gulp-rename": "^1.4.0",
+    "minimist": "^1.2.0",
+    "ts-node": "^8.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hiboy51/sg_demo.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hiboy51/sg_demo/issues"
+  },
+  "homepage": "https://github.com/hiboy51/sg_demo#readme"
+}
